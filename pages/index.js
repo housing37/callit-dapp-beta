@@ -39,7 +39,7 @@ import web3 from "../components/Connector";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import TimestampForm from "../components/TimeStampForm";
+import TimestampForm from "../components/TimestampForm";
 import CreateMarketModal from "../components/CreateMarketModal";
 import SetMarketInfoModal from "../components/SetMarketInfoModal";
 

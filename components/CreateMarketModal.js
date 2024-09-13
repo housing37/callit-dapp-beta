@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography, Modal } from "@mui/material";
-import TimestampForm from "./TimeStampForm";
+import TimestampForm from "./TimestampForm";
 
 const CreateMarketModal = ({
   createModalopen,

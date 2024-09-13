@@ -11,7 +11,7 @@ import {
   FormControl,
   OutlinedInput,
 } from "@mui/material";
-import TimestampForm from "./TimeStampForm";
+import TimestampForm from "./TimestampForm";
 
 const SetMarketInfoModal = ({
   setInfoModalOpen,
