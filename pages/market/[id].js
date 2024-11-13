@@ -123,7 +123,6 @@ const MarketPage = () => {
   const [pricePercent, setPricePercent] = useState([]);
   const [nameSymbol, setNameSymbol] = useState([]);
   const [usdLiquidty, setUsdLquidity] = useState(-1);
-  
 
   // To Buy Ticket
   const [buyTicketModalOpen, setBuyTicketModalOpen] = useState(false);
@@ -167,13 +166,17 @@ const MarketPage = () => {
     let nameSymbStr = [];
     let usdLiquidity = 0;
     if (marketDetailData != undefined) {
-      for (let i = 0; i < marketDetailData.marketResults.resultOptionTokens.length; i++) {
+      for (
+        let i = 0;
+        i < marketDetailData.marketResults.resultOptionTokens.length;
+        i++
+      ) {
         let tokAddr = marketDetailData.marketResults.resultOptionTokens[i];
         priceStrArr.push(await getPricePercentDataFromDex(tokAddr));
         nameSymbStr.push(await getNameSymbolDataFromDex(tokAddr));
         usdLiquidity += await getLiquidityDataFromDex(tokAddr);
       }
-      
+
       setPricePercent(priceStrArr);
       setNameSymbol(nameSymbStr);
       setUsdLquidity(usdLiquidity);
@@ -203,7 +206,7 @@ const MarketPage = () => {
       const usdBalance = await getUSDBalance(contract, {
         _acct: account,
       });
-      setBalance(usdBalance.toNumber() / 10**6);
+      setBalance(usdBalance.toNumber() / 10 ** 6);
     } catch (error) {
       console.error("Error getting your balance:", error);
     }
@@ -276,7 +279,7 @@ const MarketPage = () => {
     } catch (error) {
       console.error(" error w/ closeMarketCallsForTicket ");
     }
-  }
+  };
 
   const handleExeArbPriceParityForTicket = async (params) => {
     try {
@@ -294,19 +297,23 @@ const MarketPage = () => {
     <>
       {/* Top Navigation */}
       <div className="navbar" position="static" color="default" elevation={0}>
-            <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}
+        <Toolbar>
+          <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1 }}
             style={{ cursor: "pointer" }}
             component="a" // This tells the Toolbar to behave like an anchor
-            href="/">
-          <Image
-  src="/logo.png"
-  alt="Call-It Logo"
-  width={150}
-  height={50}
-  onClick={() => router.push("/")}
-  
-/>
+            href="/"
+          >
+            <Image
+              src="/logo.png"
+              alt="Call-It Logo"
+              width={150}
+              height={50}
+              onClick={() => router.push("/")}
+            />
             {`v${currentVersion}`}
           </Typography>
 
@@ -316,382 +323,487 @@ const MarketPage = () => {
         </Toolbar>
       </div>
       <Container maxWidth={false} sx={{ marginTop: 4 }}>
-      <Box
-        sx={{
-          padding: "20px",
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 2,
-        }}
-      >
-      
-      {/* Left Section */}
-      <div className="grid-container">
-      <Card
-  sx={{
-    padding: {
-      xs: "5px",  // For extra small devices (mobile phones)
-      sm: "10px", // For small devices (tablets)
-      md: "15px", // For medium devices (desktops)
-    },
-    borderRadius: 2,
-    boxShadow: 3,
-    marginTop: {
-      xs: "5px",   // Margin for small screens
-      sm: "15px",  // Center margin for medium and larger screens
-      md: "15px",    // For desktops
-    },
-    width: {
-      xs: "100%",    // Make the width responsive for mobile devices
-      sm: "100%",    // For tablets
-      md: "100%",    // For desktops
-    },
-    color: "white",
-    background: ` radial-gradient(circle at 100% 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 0% 0%/8px 8px no-repeat,
-  radial-gradient(circle at 0 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 100% 0%/8px 8px no-repeat,
-  radial-gradient(circle at 100% 0, #0d0d0d 0, #0d0d0d 5px, transparent 5px) 0% 100%/8px 8px no-repeat,
-  radial-gradient(circle at 0 0, #0d0d0d 0, #0d0d0d 5px, transparent 5px) 100% 100%/8px 8px no-repeat,
-  linear-gradient(#1a1a1a, #0d0d0d) 50% 50%/calc(100% - 6px) calc(100% - 16px) no-repeat,
-  linear-gradient(#1a1a1a, #0d0d0d) 50% 50%/calc(100% - 16px) calc(100% - 6px) no-repeat,
-   rgb(230, 1, 1)`,
-    boxShadow: `inset 0 0 15px rgba(164, 93, 187, 0.8), 
-                0 0 20px 10px rgba(164, 93, 187, 0.3)`,
-    transition: "border 0.2s ease-in-out",
-    "&:hover": {
-      border: "1px solid darkblue",
-    },
-  }}
->
-<Box
-  display="flex"
-  alignItems="center"
-  mb={3}
-  sx={{
-    flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on smaller screens
-  }}
->
-  <Avatar
-    alt="Vote"
-    src="/vote_img.jpg"
-    sx={{
-      width: { xs: 50, sm: 80 }, // Smaller width for mobile, larger for desktop
-      height: { xs: 50, sm: 80 },
-      marginRight: { xs: 0, sm: 2 }, // No margin on mobile
-      mb: { xs: 1, sm: 0 }, // Add margin bottom on mobile for stacking
-    }}
-  />
-  {marketDetailData && marketDetailData.name && marketDetailData.marketUsdAmnts ? (
-    <Box>
-      <Typography
-        variant="h5"
-        fontWeight="bold"
-        sx={{
-          fontSize: { xs: '1.2rem', sm: '1.5rem' }, // Smaller font size for mobile
-          textAlign: { xs: 'center', sm: 'left' },
-        }}
-      >
-        {marketDetailData.name} &nbsp; • &nbsp;{marketDetailData.category ? marketDetailData.category : '<category>'} &nbsp;
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        sx={{
-          color: colors.text,
-          fontSize: { xs: '0.875rem', sm: '1rem' }, // Adjust font size for mobile
-          textAlign: { xs: 'center', sm: 'left' },
-        }}
-      >
-        <b>Status:</b> {`${marketDetailData.marketDatetimes.dtCallDeadline < Math.floor(Date.now() / 1000) ? 'call deadline passed' : 'CALLS OPEN'}`} &nbsp;
-        {`${marketDetailData.marketDatetimes.dtResultVoteStart < Math.floor(Date.now() / 1000) ? (marketDetailData.marketDatetimes.dtResultVoteEnd < Math.floor(Date.now() / 1000) ? '+ voting ended' : '+ voting started') : ''}`}
-        <br />
-        <b>Prize Pool: </b> ${usdLiquidty} &nbsp;
-      </Typography>
-    </Box>
-  ) : null}
-</Box>
-
-{marketDetailData && marketDetailData.name ? (
-  <Box mb={2}>
-  <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-      <b>Maker: </b>&nbsp;{marketDetailData.maker}
-    </Typography>
-    <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-      <b>MarketHash: &nbsp;</b>{marketDetailData.marketHash}
-    </Typography>
-    <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-              <b> MarketNum: &nbsp;</b>
-                {marketDetailData.marketNum}
-              </Typography>
-              <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-              <b> Rules: &nbsp;</b>
-                {marketDetailData.rule}
-              </Typography>
-              <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-              <b>Call Deadline: &nbsp;</b>
-                {/* {marketDetailData.marketDatetimes.dtCallDeadline} */}
-                {deadlineDate} (no more bets!)
-              </Typography>
-              <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-              <b>Voting Starts: &nbsp;</b>
-                {/* {marketDetailData.marketDatetimes.dtResultVoteStart} */}
-                {votingStartDate}
-              </Typography>
-              <Typography variant="body2" sx={{ color: colors.text, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-              <b>Voting Ends: &nbsp;</b>
-                {/* {marketDetailData.marketDatetimes.dtResultVoteEnd} */}
-                {votingEndDate}
-              </Typography>
-  </Box>
-) : null}
-
-<Box mb={2}>
-  <Typography
-    variant="caption"
-    sx={{
-      color: colors.text,
-      fontSize: { xs: '0.75rem', sm: '0.875rem' }, // Smaller font size for captions
-      textAlign: { xs: 'center', sm: 'left' },
-    }}
-  >
-    OUTCOME
-  </Typography>
-</Box>
-
-{marketDetailData &&
-  marketDetailData.marketResults &&
-  marketDetailData.marketResults.resultLabels ? (
-  marketDetailData.marketResults.resultLabels.map((label, index) => (
-    <Box
-      key={index}
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      mb={2}
-      sx={{
-        flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on mobile
-      }}
-    >
-      <Box display="flex" alignItems="center" sx={{ mb: { xs: 2, sm: 0 } }}>
-        <Avatar
-          alt={label}
-          src={`/candidate_${index + 1}.jpg`} // Replace with actual images
-          sx={{ width: { xs: 30, sm: 40 }, height: { xs: 30, sm: 40 }, marginRight: 2 }}
-        />
-        <Box>
-          <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>{label}</Typography>
-          <Typography
-            variant="caption"
-            sx={{
-              color: colors.text,
-              fontSize: { xs: '0.75rem', sm: '0.875rem' },
-            }}
-          >
-            {`${marketDetailData.marketResults.resultDescrs[index]}`}
-          </Typography>
-        </Box>
-      </Box>
-
-      <Box display="flex" alignItems="center" sx={{ mt: { xs: 2, sm: 0 } }}>
-        <Typography
-          variant="body2"
+        <Box
           sx={{
-            color: colors.text,
-            fontSize: { xs: '0.75rem', sm: '0.875rem' },
+            padding: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 2,
           }}
         >
-          {`${marketDetailData.marketResults.resultOptionTokens[index]}`}<br />
-          {`${nameSymbol[index]}`}<br />
-          {`$${pricePercent[index]} (% to win)`}
-        </Typography>
-
-        {/* Wrap buttons in a Box to control layout */}
-        <Box
-  display="flex"
-  flexWrap="wrap" // Allows wrapping to the next line when needed
-  ml={{ xs: 0, sm: 2 }} // Adjust margin for mobile
-  mt={{ xs: 1, sm: 0 }} // Add margin on top for mobile
->
-<Button
-  className="button-card button-green"
-  variant="contained"
-  sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }} // Responsive button text
-  onClick={() => {
-    transferTicketAddr(marketDetailData.marketResults.resultOptionTokens[index]);
-    handleBuyTicketModalOpen();
-  }}
->
-            PROMO Buy
-          </Button>
-          <Button
-  className="button-card button-orange"
-  variant="contained"
-  sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' }, mt: { xs: 1, sm: 0 }, ml: { xs: 0, sm: 1 } }} // Margin adjustments for mobile
-  onClick={() => {
-    // Open the external link in a new tab
-    window.open(
-      `https://dexscreener.com/pulsechain/${marketDetailData.marketResults.resultOptionTokens[index]}`,
-      `_blank`
-    );
-    
-    // Set the ticket address
-    transferTicketAddr(marketDetailData.marketResults.resultOptionTokens[index]);
-  }}
->
-            VIEW/TRADE
-          </Button>
-          <Button
-            className="button-card button-bluesky"
-            variant="contained"
+          {/* Left Section */}
+          <Card
             sx={{
-              marginRight: 1,
-              textTransform: "none",
-              fontSize: { xs: '0.7rem', sm: '0.875rem' }, // Adjust text for button
-              mt: { xs: 1, sm: 0 }, // Add top margin for mobile
-            }}
-            onClick={() =>
-              handleExeArbPriceParityForTicket({
-                _ticket: marketDetailData.marketResults.resultOptionTokens[index],
-              })
-            }
-          >
-            exeArb
-          </Button>
-        </Box>
-      </Box>
-    </Box>
-  )) 
-) : null}
-
-        </Card>
-
-        {/* Right Section */}
- 
-        <Card
-  sx={{
-    padding: {
-      xs: "5px",  // For extra small devices (mobile phones)
-      sm: "10px", // For small devices (tablets)
-      md: "15px", // For medium devices (desktops)
-    },
-    borderRadius: 2,
-    boxShadow: 3,
-    marginTop: {
-      xs: "5px",   // Margin for small screens
-      sm: "15px",  // Center margin for medium and larger screens
-      md: "15px",
-    },
-    width: {
-      xs: "100%",    // Make the width responsive for mobile devices
-      sm: "40%",    // For tablets
-      md: "40%",    // For desktops
-    },
-    color: "white",
-    background: ` radial-gradient(circle at 100% 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 0% 0%/8px 8px no-repeat,
+              padding: {
+                xs: "5px", // For extra small devices (mobile phones)
+                sm: "10px", // For small devices (tablets)
+                md: "15px", // For medium devices (desktops)
+              },
+              borderRadius: 2,
+              boxShadow: 3,
+              marginTop: {
+                xs: "5px", // Margin for small screens
+                sm: "15px", // Center margin for medium and larger screens
+                md: "15px", // For desktops
+              },
+              width: "max-content",
+              color: "white",
+              background: ` radial-gradient(circle at 100% 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 0% 0%/8px 8px no-repeat,
   radial-gradient(circle at 0 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 100% 0%/8px 8px no-repeat,
   radial-gradient(circle at 100% 0, #0d0d0d 0, #0d0d0d 5px, transparent 5px) 0% 100%/8px 8px no-repeat,
   radial-gradient(circle at 0 0, #0d0d0d 0, #0d0d0d 5px, transparent 5px) 100% 100%/8px 8px no-repeat,
   linear-gradient(#1a1a1a, #0d0d0d) 50% 50%/calc(100% - 6px) calc(100% - 16px) no-repeat,
   linear-gradient(#1a1a1a, #0d0d0d) 50% 50%/calc(100% - 16px) calc(100% - 6px) no-repeat,
    rgb(230, 1, 1)`,
-    boxShadow: `inset 0 0 15px rgba(164, 93, 187, 0.8), 
+              boxShadow: `inset 0 0 15px rgba(164, 93, 187, 0.8), 
                 0 0 20px 10px rgba(164, 93, 187, 0.3)`,
-    transition: "border 0.2s ease-in-out",
-    "&:hover": {
-      border: "1px solid darkblue",
-    },
-  }}
->
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={2}
+              transition: "border 0.2s ease-in-out",
+              "&:hover": {
+                border: "1px solid darkblue",
+              },
+            }}
           >
-            <Button
-              variant="contained"
-              // color="error"
-              color={`${marketDetailData && marketDetailData.marketUsdAmnts.usdAmntPrizePool == 0 ? 'info': 'error'}`}
-              fullwidth="true"
-              onClick={() =>
-                handleCloseMarketCallsModalOpen({
-                  _ticket:
-                    marketDetailData.marketResults
-                      .resultOptionTokens[0],
-                })
-              }
-              sx={{ textTransform: "none" }}
+            <Box
+              display="flex"
+              alignItems="center"
+              mb={3}
+              sx={{
+                flexDirection: { xs: "column", sm: "row" }, // Stack vertically on smaller screens
+              }}
             >
-              {`${marketDetailData && marketDetailData.marketUsdAmnts.usdAmntPrizePool == 0 ? 'Call Deadline Passesd? (earn $CALL)': 'Calls Closed (NO MORE BETS!)'}`}
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={2}
-          >
-            <FormControl fullwidth="true" color="info">
-              <Select
-                displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
-                value={voteOption}
-                onChange={handleVoteSelect}
-                sx={{ padding: 0 }}
-              >
-                <MenuItem value="">castVoteForMarketTicket</MenuItem>
-                {marketDetailData &&
-                marketDetailData.marketResults &&
-                marketDetailData.marketResults.resultLabels
-                  ? marketDetailData.marketResults.resultLabels.map(
-                      (label, index) => (
-                        <MenuItem key={index} value={`${index}`}>
-                          {label}
-                        </MenuItem>
-                      )
-                    )
-                  : null}
-              </Select>
-            </FormControl>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={2}
-          >
-            <Button
-              className="button-close"
-              variant="contained"
-              color="error"
-              fullwidth="true"
-              onClick={handleBuyTicketModalOpen}
-              // onClick={handleCloseMarketModalOpen}
-              sx={{ textTransform: "none" }}
-            >
-              CLOSE THIS MARKET
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={2}
-          >
-            <Button
-              className="button-claim"
-              variant="contained"
-              color="primary"
-              fullwidth="true"
-              onClick={handleBuyTicketModalOpen}
-              sx={{ textTransform: "none" }}
-            >
-              Claim Ticket Rewards
-            </Button>
-          </Box>
-        </Card>
-        
-        </div>
+              <Avatar
+                alt="Vote"
+                src="/vote_img.jpg"
+                sx={{
+                  width: { xs: 50, sm: 80 }, // Smaller width for mobile, larger for desktop
+                  height: { xs: 50, sm: 80 },
+                  marginRight: { xs: 0, sm: 2 }, // No margin on mobile
+                  mb: { xs: 1, sm: 0 }, // Add margin bottom on mobile for stacking
+                }}
+              />
+              {marketDetailData &&
+              marketDetailData.name &&
+              marketDetailData.marketUsdAmnts ? (
+                <Box>
+                  <Typography
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{
+                      fontSize: { xs: "1.2rem", sm: "1.5rem" }, // Smaller font size for mobile
+                      textAlign: { xs: "center", sm: "left" },
+                    }}
+                  >
+                    {marketDetailData.name} &nbsp; • &nbsp;
+                    {marketDetailData.category
+                      ? marketDetailData.category
+                      : "<category>"}{" "}
+                    &nbsp;
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      color: colors.text,
+                      fontSize: { xs: "0.875rem", sm: "1rem" }, // Adjust font size for mobile
+                      textAlign: { xs: "center", sm: "left" },
+                    }}
+                  >
+                    <b>Status:</b>{" "}
+                    {`${
+                      marketDetailData.marketDatetimes.dtCallDeadline <
+                      Math.floor(Date.now() / 1000)
+                        ? "call deadline passed"
+                        : "CALLS OPEN"
+                    }`}{" "}
+                    &nbsp;
+                    {`${
+                      marketDetailData.marketDatetimes.dtResultVoteStart <
+                      Math.floor(Date.now() / 1000)
+                        ? marketDetailData.marketDatetimes.dtResultVoteEnd <
+                          Math.floor(Date.now() / 1000)
+                          ? "+ voting ended"
+                          : "+ voting started"
+                        : ""
+                    }`}
+                    <br />
+                    <b>Prize Pool: </b> ${usdLiquidty} &nbsp;
+                  </Typography>
+                </Box>
+              ) : null}
+            </Box>
 
-      </Box>
+            {marketDetailData && marketDetailData.name ? (
+              <Box mb={2}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b>Maker: </b>&nbsp;{marketDetailData.maker}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b>MarketHash: &nbsp;</b>
+                  {marketDetailData.marketHash}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b> MarketNum: &nbsp;</b>
+                  {marketDetailData.marketNum}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b> Rules: &nbsp;</b>
+                  {marketDetailData.rule}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b>Call Deadline: &nbsp;</b>
+                  {/* {marketDetailData.marketDatetimes.dtCallDeadline} */}
+                  {deadlineDate} (no more bets!)
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b>Voting Starts: &nbsp;</b>
+                  {/* {marketDetailData.marketDatetimes.dtResultVoteStart} */}
+                  {votingStartDate}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                  }}
+                >
+                  <b>Voting Ends: &nbsp;</b>
+                  {/* {marketDetailData.marketDatetimes.dtResultVoteEnd} */}
+                  {votingEndDate}
+                </Typography>
+              </Box>
+            ) : null}
+
+            <Box mb={2}>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: colors.text,
+                  fontSize: { xs: "0.75rem", sm: "0.875rem" }, // Smaller font size for captions
+                  textAlign: { xs: "center", sm: "left" },
+                }}
+              >
+                OUTCOME
+              </Typography>
+            </Box>
+
+            {marketDetailData &&
+            marketDetailData.marketResults &&
+            marketDetailData.marketResults.resultLabels
+              ? marketDetailData.marketResults.resultLabels.map(
+                  (label, index) => (
+                    <Box
+                      key={index}
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mb={2}
+                      sx={{
+                        flexDirection: { xs: "column", sm: "row" }, // Stack vertically on mobile
+                      }}
+                    >
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        sx={{ mb: { xs: 2, sm: 0 } }}
+                      >
+                        <Avatar
+                          alt={label}
+                          src={`/candidate_${index + 1}.jpg`} // Replace with actual images
+                          sx={{
+                            width: { xs: 30, sm: 40 },
+                            height: { xs: 30, sm: 40 },
+                            marginRight: 2,
+                          }}
+                        />
+                        <Box>
+                          <Typography
+                            sx={{ fontSize: { xs: "0.875rem", sm: "1rem" } }}
+                          >
+                            {label}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: colors.text,
+                              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                            }}
+                          >
+                            {`${marketDetailData.marketResults.resultDescrs[index]}`}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        sx={{ mx: { xs: 2, sm: 1 } }}
+                      >
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          sx={{ mt: { xs: 2, sm: 0 } }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: colors.text,
+                              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                            }}
+                          >
+                            {`${marketDetailData.marketResults.resultOptionTokens[index]}`}
+                            <br />
+                            {`${nameSymbol[index]}`}
+                            <br />
+                            {`$${pricePercent[index]} (% to win)`}
+                          </Typography>
+                        </Box>
+                        {/* Wrap buttons in a Box to control layout */}
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          // flexWrap="wrap" // Allows wrapping to the next line when needed
+                          ml={{ xs: 0, sm: 2 }} // Adjust margin for mobile
+                          mt={{ xs: 1, sm: 0 }} // Add margin on top for mobile
+                        >
+                          <Button
+                            className="button-green"
+                            variant="contained"
+                            sx={{
+                              fontSize: { xs: "0.7rem", sm: "0.875rem" },
+                              textTransform: "none",
+                            }} // Responsive button text
+                            onClick={() => {
+                              transferTicketAddr(
+                                marketDetailData.marketResults
+                                  .resultOptionTokens[index]
+                              );
+                              handleBuyTicketModalOpen();
+                            }}
+                          >
+                            Promo Buy
+                          </Button>
+                          <Button
+                            className="button-orange"
+                            variant="contained"
+                            sx={{
+                              fontSize: { xs: "0.7rem", sm: "0.875rem" },
+                              mt: { xs: 1, sm: 0 },
+                              ml: { xs: 0, sm: 1 },
+                              textTransform: "none",
+                            }} // Margin adjustments for mobile
+                            onClick={() => {
+                              // Open the external link in a new tab
+                              window.open(
+                                `https://dexscreener.com/pulsechain/${marketDetailData.marketResults.resultOptionTokens[index]}`,
+                                `_blank`
+                              );
+
+                              // Set the ticket address
+                              transferTicketAddr(
+                                marketDetailData.marketResults
+                                  .resultOptionTokens[index]
+                              );
+                            }}
+                          >
+                            View/Trade
+                          </Button>
+                          <Button
+                            className="button-bluesky"
+                            variant="contained"
+                            sx={{
+                              fontSize: { xs: "0.7rem", sm: "0.875rem" },
+                              mt: { xs: 1, sm: 0 },
+                              ml: { xs: 0, sm: 1 },
+                              textTransform: "none",
+                            }} // Margin adjustments for mobile
+                            onClick={() =>
+                              handleExeArbPriceParityForTicket({
+                                _ticket:
+                                  marketDetailData.marketResults
+                                    .resultOptionTokens[index],
+                              })
+                            }
+                          >
+                            exeArb
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Box>
+                  )
+                )
+              : null}
+          </Card>
+
+          {/* Right Section */}
+
+          <Card
+            sx={{
+              padding: {
+                xs: "5px", // For extra small devices (mobile phones)
+                sm: "10px", // For small devices (tablets)
+                md: "15px", // For medium devices (desktops)
+              },
+              borderRadius: 2,
+              boxShadow: 3,
+              marginTop: {
+                xs: "5px", // Margin for small screens
+                sm: "15px", // Center margin for medium and larger screens
+                md: "15px",
+              },
+              width: {
+                xs: "100%", // Make the width responsive for mobile devices
+                sm: "40%", // For tablets
+                md: "40%", // For desktops
+              },
+              color: "white",
+              background: ` radial-gradient(circle at 100% 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 0% 0%/8px 8px no-repeat,
+  radial-gradient(circle at 0 100%, #1a1a1a 0, #1a1a1a 5px, transparent 5px) 100% 0%/8px 8px no-repeat,
+  radial-gradient(circle at 100% 0, #0d0d0d 0, #0d0d0d 5px, transparent 5px) 0% 100%/8px 8px no-repeat,
+  radial-gradient(circle at 0 0, #0d0d0d 0, #0d0d0d 5px, transparent 5px) 100% 100%/8px 8px no-repeat,
+  linear-gradient(#1a1a1a, #0d0d0d) 50% 50%/calc(100% - 6px) calc(100% - 16px) no-repeat,
+  linear-gradient(#1a1a1a, #0d0d0d) 50% 50%/calc(100% - 16px) calc(100% - 6px) no-repeat,
+   rgb(230, 1, 1)`,
+              boxShadow: `inset 0 0 15px rgba(164, 93, 187, 0.8), 
+                0 0 20px 10px rgba(164, 93, 187, 0.3)`,
+              transition: "border 0.2s ease-in-out",
+              "&:hover": {
+                border: "1px solid darkblue",
+              },
+            }}
+          >
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              <Button
+                variant="contained"
+                // color="error"
+                color={`${
+                  marketDetailData &&
+                  marketDetailData.marketUsdAmnts.usdAmntPrizePool == 0
+                    ? "info"
+                    : "error"
+                }`}
+                fullwidth="true"
+                onClick={() =>
+                  handleCloseMarketCallsModalOpen({
+                    _ticket:
+                      marketDetailData.marketResults.resultOptionTokens[0],
+                  })
+                }
+                sx={{ textTransform: "none" }}
+              >
+                {`${
+                  marketDetailData &&
+                  marketDetailData.marketUsdAmnts.usdAmntPrizePool == 0
+                    ? "Call Deadline Passesd? (earn $CALL)"
+                    : "Calls Closed (NO MORE BETS!)"
+                }`}
+              </Button>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              <FormControl fullwidth="true" color="info">
+                <Select
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  value={voteOption}
+                  onChange={handleVoteSelect}
+                  sx={{ padding: 0 }}
+                >
+                  <MenuItem value="">castVoteForMarketTicket</MenuItem>
+                  {marketDetailData &&
+                  marketDetailData.marketResults &&
+                  marketDetailData.marketResults.resultLabels
+                    ? marketDetailData.marketResults.resultLabels.map(
+                        (label, index) => (
+                          <MenuItem key={index} value={`${index}`}>
+                            {label}
+                          </MenuItem>
+                        )
+                      )
+                    : null}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              <Button
+                // className="button-close"
+                variant="contained"
+                color="error"
+                fullWidth
+                onClick={handleBuyTicketModalOpen}
+                // onClick={handleCloseMarketModalOpen}
+                sx={{ textTransform: "none" }}
+              >
+                Close This Market
+              </Button>
+            </Box>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              <Button
+                // className="button-claim"
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleBuyTicketModalOpen}
+                sx={{ textTransform: "none" }}
+              >
+                Claim Ticket Rewards
+              </Button>
+            </Box>
+          </Card>
+        </Box>
       </Container>
       <BuyCallTicketModal
         buyTicketModalOpen={buyTicketModalOpen}
@@ -699,7 +811,6 @@ const MarketPage = () => {
         handleBuyTicketWithPromoCode={handleBuyTicketWithPromoCode}
         ticketAddr={ticketAddr}
       />
-      
     </>
   );
 };
