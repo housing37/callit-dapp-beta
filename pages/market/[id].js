@@ -307,14 +307,16 @@ const MarketPage = () => {
             component="a" // This tells the Toolbar to behave like an anchor
             href="/"
           >
-            <Image
-              src="/logo.png"
-              alt="Call-It Logo"
-              width={150}
-              height={50}
-              onClick={() => router.push("/")}
-            />
-            {`v${currentVersion}`}
+            <div className="logo-container">
+              <Image
+                src="/logo.png"
+                alt="Call-It Logo"
+                width={150}
+                height={50}
+                onClick={() => router.push("/")}
+              />
+              {`v${currentVersion}`}
+            </div>
           </Typography>
 
           <Button variant="outlined" color="info" onClick={handleGetBalance}>
