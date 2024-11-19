@@ -142,14 +142,18 @@ export default function Home() {
   useEffect(() => {
     refreshMarketList();
     handleGetBalance();
-  }, [account, onlyMyMarkets, marketCategory, page, totalPages]); // Empty dependency array means this effect runs only once when the component mounts
+    console.log("mark: first useEffect");
+  }, [account, onlyMyMarkets, marketCategory, page, totalPages]);
 
+  useEffect(() => {
+    refreshMarketList();
+  }, []); // Empty dependency array means this effect runs only once when the component mounts
   const refreshMarketList = async () => {
     console.log("Market List refreshing...");
-    if (account == undefined) {
-      setLoading(false);
-      return;
-    }
+    // if (account == undefined) {
+    //   setLoading(false);
+    //   return;
+    // }
 
     let maker = "";
     if (onlyMyMarkets) maker = account;
@@ -157,7 +161,6 @@ export default function Home() {
 
     const marektCnt = await handleGetMarketCntForMakerOrCategory({
       _maker: maker,
-      // _maker: account,
       _category: marketCategory,
     });
     console.log("market count: ", marektCnt);
@@ -217,6 +220,10 @@ export default function Home() {
   };
   //Functions to manage markets
   const handleMarketCheck = () => {
+    if (account == undefined) {
+      setOnlyMyMarkets(false);
+      return;
+    }
     if (onlyMyMarkets) setOnlyMyMarkets(false);
     else setOnlyMyMarkets(true);
   };
@@ -286,7 +293,7 @@ export default function Home() {
       await setMarketInfo(contract, params);
       console.log("Market Info Updated!");
     } catch (error) {
-      console.error("Error creating market:", error);
+      console.error("Error updating market:", error);
     }
     await refreshMarketList();
     handleSetInfoModalClose();
@@ -295,8 +302,11 @@ export default function Home() {
   // Trigger
   const handleGetMarketsForMakerOrCategory = async (params) => {
     try {
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(ADDR_FACT, factoryAbi, signer);
+      // const signer = provider.getSigner();
+      const provider = new ethers.providers.JsonRpcProvider(
+        "https://rpc.ankr.com/eth"
+      );
+      const contract = new ethers.Contract(ADDR_FACT, factoryAbi, provider);
       const marketsArray = await getMarketsForMakerOrCategory(contract, params);
       // await getMarketHashesForMakerOrCategory(contract,params); //TEST
 
@@ -309,8 +319,11 @@ export default function Home() {
   // Trigger
   const handleGetMarketCntForMakerOrCategory = async (params) => {
     try {
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(ADDR_FACT, factoryAbi, signer);
+      // const signer = provider.getSigner();
+      const provider = new ethers.providers.JsonRpcProvider(
+        "https://rpc.ankr.com/eth"
+      );
+      const contract = new ethers.Contract(ADDR_FACT, factoryAbi, provider);
       const count = await getMarketCntForMakerOrCategory(contract, params);
       console.log("Market Count For Category Called: ", count);
       return count;
@@ -454,6 +467,31 @@ export default function Home() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+          {hasMetamask ? (
+            active ? (
+              <Button
+                variant="outlined"
+                color="info"
+                onClick={handleGetBalance}
+              >
+                balance : ${balance != null ? balance : "Press me"}
+              </Button>
+            ) : (
+              <div
+                className="button"
+                fullwidth="true"
+                variant="contained"
+                color="error"
+                onClick={connectWallet}
+              >
+                CONNECT METAMASK
+              </div>
+            )
+          ) : (
+            <div className="button-container">
+              <h2>Install metamask, please.</h2>
+            </div>
+          )}
         </Toolbar>
       </div>
 
@@ -492,98 +530,62 @@ export default function Home() {
           {/* Left Column for Side Sections */}
           <Box flexBasis="300px">
             <Box sx={{ textAlign: "center", marginTop: 4 }}>
-              {hasMetamask ? (
-                active ? (
+              <div className="typography" variant="h5" gutterbottom="true">
+                Welcome to Call-It!
+              </div>
+              <div className="container">
+                <p style={{ textAlign: "left" }}>
+                  <h1>
+                    <b>USD balance is required to:</b>
+                  </h1>
+                  <h2>
+                    <p>1) Create new markets</p>
+                    <p>2) Buy call tickets w/ promo codes</p>
+                    <p>3) Execute Arbitrage Price Parity for tickets</p>
+                  </h2>
+                </p>
+                {/* <p>USD balance is required to:</p>
+                <ul style={{ textAlign: 'left' }}>
+                    <li>create markets</li>
+                    <li>Make calls with promo codes</li>
+                    <li>Execute Arbitrage Price Parity</li>
+                </ul> */}
+                {active ? (
                   <>
-                    <div
-                      className="typography"
-                      variant="h5"
-                      gutterbottom="true"
-                    >
-                      Welcome to Call-It!
-                    </div>
-                    <div className="container">
-                      <div>
-                        <p style={{ textAlign: "left" }}>
-                          <h1>
-                            <b>USD balance is required to:</b>
-                          </h1>
-                          <h2>
-                            <p>1) Create new markets</p>
-                            <p>2) Buy call tickets w/ promo codes</p>
-                            <p>3) Execute Arbitrage Price Parity for tickets</p>
-                          </h2>
-                        </p>
-                        {/* <p>USD balance is required to:</p>
-                      <ul style={{ textAlign: 'left' }}>
-                          <li>create markets</li>
-                          <li>Make calls with promo codes</li>
-                          <li>Execute Arbitrage Price Parity</li>
-                      </ul> */}
-
-                        <h2>
-                          <p>
-                            <u>Your Wallet Connected</u>
-                          </p>
-                        </h2>
-                        <p>
-                          <h3>
-                            <b>{account}</b>
-                          </h3>
-                        </p>
-                      </div>
-                      <Button
-                        fullwidth="true"
-                        variant="outlined"
-                        color="info"
-                        onClick={handleGetBalance}
-                      >
-                        balance : ${balance != null ? balance : "Press me"}
-                      </Button>
-                      <div>
-                        <h4>
-                          To make a USD deposit, transfer native PLS to the
-                          CallitVault <b>{ADDR_VAULT}</b>
-                        </h4>
-                      </div>
-                      <h3>
-                        <Typography
-                          sx={{
-                            fontStyle: "normal",
-                            fontWeight: "normal",
-                            lineHeight: "24px",
-                            fontSize: "14px",
-                            letterSpacing: "0.18px",
-                            color: "#FFFFFF",
-                            margin: "0px 0px",
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleDepositModalOpen}
-                        >
-                          Make deposit for someone else (testing)
-                        </Typography>
-                      </h3>
-                    </div>
+                    <h2>
+                      <u>Your Wallet Connected</u>
+                    </h2>
+                    <h3>
+                      <b>{account}</b>
+                    </h3>
                   </>
-                ) : (
-                  <div className="button-container">
-                    <div
-                      className="button"
-                      fullwidth="true"
-                      variant="contained"
-                      color="error"
-                      onClick={connectWallet}
-                    >
-                      CONNECT METAMASK
-                    </div>
-                  </div>
-                )
-              ) : (
-                <div className="button-container">
-                  <h2>Install metamask, please.</h2>
+                ) : null}
+
+                <div>
+                  <h4>
+                    To make a USD deposit, transfer native PLS to the
+                    CallitVault <b>{ADDR_VAULT}</b>
+                  </h4>
                 </div>
-              )}
+                <h3>
+                  <Typography
+                    sx={{
+                      fontStyle: "normal",
+                      fontWeight: "normal",
+                      lineHeight: "24px",
+                      fontSize: "14px",
+                      letterSpacing: "0.18px",
+                      color: "#FFFFFF",
+                      margin: "0px 0px",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleDepositModalOpen}
+                  >
+                    Make deposit for someone else (testing)
+                  </Typography>
+                </h3>
+              </div>
             </Box>
             <Box sx={{ textAlign: "center", marginTop: 4 }}>
               {active ? (

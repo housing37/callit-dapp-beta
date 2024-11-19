@@ -17,7 +17,7 @@ export const makeNewMarket = async (contract, params) => {
     _resultLabels,
     _resultDescrs,
     _altTokAddress, // New parameter
-    _altTokAmnt // New parameter
+    _altTokAmnt, // New parameter
   } = params;
   console.log("contract--", _resultLabels);
   try {
@@ -44,7 +44,8 @@ export const makeNewMarket = async (contract, params) => {
 
 // Buy call ticket with promo code
 export const buyCallTicketWithPromoCode = async (contract, params) => {
-  const { _ticket, _promoCodeHash, _usdAmnt, _altTokAddress, _altTokAmnt } = params; // New parameters
+  const { _ticket, _promoCodeHash, _usdAmnt, _altTokAddress, _altTokAmnt } =
+    params; // New parameters
   try {
     const tx = await contract.buyCallTicketWithPromoCode(
       _ticket,
@@ -208,10 +209,7 @@ export const getMarketCntForMakerOrCategory = async (contract, params) => {
   const { _maker, _category } = params;
   console.log("params:", params);
   try {
-    const tx = await contract.getMarketCntForMakerOrCategory(
-      _maker,
-      _category
-    );
+    const tx = await contract.getMarketCntForMakerOrCategory(_maker, _category);
     return tx.toNumber();
   } catch (error) {
     console.error("Error in getMarketCntForMakerOrCategory:", error);
