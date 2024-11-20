@@ -132,7 +132,9 @@ const MarketPage = () => {
   const [voteOption, setVoteOption] = useState("");
 
   useEffect(() => {
-    if (account == undefined) router.push("/");
+    if (account == "") {
+      console.log("no account");
+    }
     if (account) {
       // Create an ethers provider from the URL (web3 provider)
       const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -147,12 +149,17 @@ const MarketPage = () => {
         .catch((error) => {
           console.error("Error setting up signer:", error);
         });
+      handleGetBalance();
+    } else {
+      const provider = new ethers.providers.JsonRpcProvider(
+        "https://rpc.pulsechain.com"
+      );
+      setSigner(provider);
     }
   }, [account]);
 
   // Another useEffect for handling the market detail call
   useEffect(async () => {
-    handleGetBalance();
     if (signer && id) {
       const detailData = await handleGetMarketDetailForTicket(signer, {
         _ticket: id,
@@ -610,6 +617,10 @@ const MarketPage = () => {
                               textTransform: "none",
                             }} // Responsive button text
                             onClick={() => {
+                              if (!account) {
+                                alert("Please connect wallet!");
+                                return;
+                              }
                               transferTicketAddr(
                                 marketDetailData.marketResults
                                   .resultOptionTokens[index]
@@ -629,6 +640,10 @@ const MarketPage = () => {
                               textTransform: "none",
                             }} // Margin adjustments for mobile
                             onClick={() => {
+                              if (!account) {
+                                alert("Please connect wallet!");
+                                return;
+                              }
                               // Open the external link in a new tab
                               window.open(
                                 `https://dexscreener.com/pulsechain/${marketDetailData.marketResults.resultOptionTokens[index]}`,
@@ -653,13 +668,17 @@ const MarketPage = () => {
                               ml: { xs: 0, sm: 1 },
                               textTransform: "none",
                             }} // Margin adjustments for mobile
-                            onClick={() =>
+                            onClick={() => {
+                              if (!account) {
+                                alert("Please connect wallet!");
+                                return;
+                              }
                               handleExeArbPriceParityForTicket({
                                 _ticket:
                                   marketDetailData.marketResults
                                     .resultOptionTokens[index],
-                              })
-                            }
+                              });
+                            }}
                           >
                             exeArb
                           </Button>
