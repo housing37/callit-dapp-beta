@@ -149,7 +149,6 @@ const MarketPage = () => {
         .catch((error) => {
           console.error("Error setting up signer:", error);
         });
-      handleGetBalance();
     } else {
       const provider = new ethers.providers.JsonRpcProvider(
         "https://rpc.pulsechain.com"
@@ -160,6 +159,7 @@ const MarketPage = () => {
 
   // Another useEffect for handling the market detail call
   useEffect(async () => {
+    handleGetBalance();
     if (signer && id) {
       const detailData = await handleGetMarketDetailForTicket(signer, {
         _ticket: id,
@@ -325,10 +325,21 @@ const MarketPage = () => {
               {`v${currentVersion}`}
             </div>
           </Typography>
-
-          <Button variant="outlined" color="info" onClick={handleGetBalance}>
-            balance : ${balance != null ? balance : "Press me"}
-          </Button>
+          {account ? (
+            <Button variant="outlined" color="info" onClick={handleGetBalance}>
+              balance : ${balance != null ? balance : "Press me"}
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              color="info"
+              onClick={() =>
+                alert("Please back to the landing page and connect wallet!")
+              }
+            >
+              {`Balance : ???`}
+            </Button>
+          )}
         </Toolbar>
       </div>
       <Container maxWidth={false} sx={{ marginTop: 4 }}>
@@ -618,7 +629,9 @@ const MarketPage = () => {
                             }} // Responsive button text
                             onClick={() => {
                               if (!account) {
-                                alert("Please connect wallet!");
+                                alert(
+                                  "Please back to the landing page and connect wallet!"
+                                );
                                 return;
                               }
                               transferTicketAddr(
@@ -641,7 +654,9 @@ const MarketPage = () => {
                             }} // Margin adjustments for mobile
                             onClick={() => {
                               if (!account) {
-                                alert("Please connect wallet!");
+                                alert(
+                                  "Please back to the landing page and connect wallet!"
+                                );
                                 return;
                               }
                               // Open the external link in a new tab
@@ -670,7 +685,9 @@ const MarketPage = () => {
                             }} // Margin adjustments for mobile
                             onClick={() => {
                               if (!account) {
-                                alert("Please connect wallet!");
+                                alert(
+                                  "Please back to the landing page and connect wallet!"
+                                );
                                 return;
                               }
                               handleExeArbPriceParityForTicket({

@@ -30,6 +30,9 @@ import {
 
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+
+import { connectWallet } from "../utils/wallet";
+
 import {
   makeNewMarket,
   buyCallTicketWithPromoCode,
@@ -245,15 +248,15 @@ export default function Home() {
   const handleDepositModalClose = () => setDepositModalOpen(false);
 
   // Connect to MetaMask
-  const connectWallet = async () => {
-    try {
-      await activate(injected);
-      setHasMetamask(true);
-      console.log("User's wallet address:", account);
-    } catch (error) {
-      console.error("Error connecting to MetaMask:", error);
-    }
-  };
+  // const connectWallet = async () => {
+  //   try {
+  //     await activate(injected);
+  //     setHasMetamask(true);
+  //     console.log("User's wallet address:", account);
+  //   } catch (error) {
+  //     console.error("Error connecting to MetaMask:", error);
+  //   }
+  // };
 
   // Get balance from vault
   const handleGetBalance = async () => {
@@ -479,7 +482,13 @@ export default function Home() {
                 balance : ${balance != null ? balance : "Press me"}
               </Button>
             ) : (
-              <Button variant="outlined" color="info" onClick={connectWallet}>
+              <Button
+                variant="outlined"
+                color="info"
+                onClick={() =>
+                  connectWallet(activate, injected, setHasMetamask, account)
+                }
+              >
                 CONNECT METAMASK
               </Button>
             )
@@ -692,6 +701,7 @@ export default function Home() {
                 ? marketsList.map((market, index) => (
                     <MarketCard
                       account={account}
+                      connectWallet={connectWallet}
                       id={market.marketNum}
                       key={index}
                       title={market.name}
