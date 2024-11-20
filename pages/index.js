@@ -304,8 +304,9 @@ export default function Home() {
     try {
       // const signer = provider.getSigner();
       const provider = new ethers.providers.JsonRpcProvider(
-        "https://rpc.ankr.com/eth"
+        "https://rpc.pulsechain.com"
       );
+
       const contract = new ethers.Contract(ADDR_FACT, factoryAbi, provider);
       const marketsArray = await getMarketsForMakerOrCategory(contract, params);
       // await getMarketHashesForMakerOrCategory(contract,params); //TEST
@@ -321,14 +322,15 @@ export default function Home() {
     try {
       // const signer = provider.getSigner();
       const provider = new ethers.providers.JsonRpcProvider(
-        "https://rpc.ankr.com/eth"
+        "https://rpc.pulsechain.com"
       );
+
       const contract = new ethers.Contract(ADDR_FACT, factoryAbi, provider);
       const count = await getMarketCntForMakerOrCategory(contract, params);
       console.log("Market Count For Category Called: ", count);
       return count;
     } catch (error) {
-      console.error("Error getting markets:", error);
+      console.error("Error getting marketCnt:", error);
     }
   };
 
@@ -477,15 +479,9 @@ export default function Home() {
                 balance : ${balance != null ? balance : "Press me"}
               </Button>
             ) : (
-              <div
-                className="button"
-                fullwidth="true"
-                variant="contained"
-                color="error"
-                onClick={connectWallet}
-              >
+              <Button variant="outlined" color="info" onClick={connectWallet}>
                 CONNECT METAMASK
-              </div>
+              </Button>
             )
           ) : (
             <div className="button-container">
@@ -544,12 +540,7 @@ export default function Home() {
                     <p>3) Execute Arbitrage Price Parity for tickets</p>
                   </h2>
                 </p>
-                {/* <p>USD balance is required to:</p>
-                <ul style={{ textAlign: 'left' }}>
-                    <li>create markets</li>
-                    <li>Make calls with promo codes</li>
-                    <li>Execute Arbitrage Price Parity</li>
-                </ul> */}
+
                 {active ? (
                   <>
                     <h2>
